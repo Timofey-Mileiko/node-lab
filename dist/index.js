@@ -1,6 +1,9 @@
 "use strict";
 //<reference path="../types/types.ts">
+//<reference path="../iterators/users-iterator.ts">
 var Users;
+//<reference path="../types/types.ts">
+//<reference path="../iterators/users-iterator.ts">
 (function (Users) {
     class UsersStorage {
         constructor() {
@@ -22,26 +25,84 @@ var Users;
             this.users.push(currentUser);
         }
         deleteUserById(id) {
-            this.users.filter(user => user.id !== id);
+            this.users = this.users.filter(user => user.id !== id);
         }
         getUsers() {
             return this.users;
         }
+        getUserByPosition(position) {
+            return this.users[position];
+        }
+        count() {
+            return this.users.length;
+        }
+        createIterator() {
+            return new Users.UsersIterator(this);
+        }
     }
     Users.UsersStorage = UsersStorage;
 })(Users || (Users = {}));
-/// <reference path="./a-user-builder.model.ts">
+/// <reference path="../users/student">
+/// <reference path="../users/teacher">
+/// <reference path="../users/administrator">
+/// <reference path="../storage/users-storage.ts">
+var Users;
+/// <reference path="../users/student">
+/// <reference path="../users/teacher">
+/// <reference path="../users/administrator">
+/// <reference path="../storage/users-storage.ts">
+(function (Users) {
+    let administratorLevels;
+    (function (administratorLevels) {
+        administratorLevels[administratorLevels["basic"] = 0] = "basic";
+        administratorLevels[administratorLevels["advanced"] = 1] = "advanced";
+    })(administratorLevels = Users.administratorLevels || (Users.administratorLevels = {}));
+})(Users || (Users = {}));
+/// <request path="../storage/user-storage.ts">
+/// <request path="../types/types.ts">
+var Users;
+/// <request path="../storage/user-storage.ts">
+/// <request path="../types/types.ts">
+(function (Users) {
+    class UsersIterator {
+        constructor(aggregator) {
+            this.aggregator = aggregator;
+            this.position = 0;
+        }
+        current() {
+            return this.aggregator.getUserByPosition(this.position);
+        }
+        next() {
+            this.position++;
+        }
+        hasNext() {
+            return this.position < this.aggregator.count();
+        }
+    }
+    Users.UsersIterator = UsersIterator;
+})(Users || (Users = {}));
 var Users;
 (function (Users) {
-    class StudentBuilderModel extends Users.UserBuilderModel {
-        addFaculty(faculty) { }
-        addGroup(group) { }
-        addSpeciality(speciality) { }
+    class UserBuilderModel {
+        createUser() { }
+        addFirstName(firstName) {
+            this.firstName = firstName;
+        }
+        addLastName(lastName) {
+            this.lastName = lastName;
+        }
+        addAge(age) {
+            this.age = age;
+        }
+        addGender(gender) {
+            this.gender = gender;
+        }
     }
-    Users.StudentBuilderModel = StudentBuilderModel;
+    Users.UserBuilderModel = UserBuilderModel;
 })(Users || (Users = {}));
-/// <reference path="./a-user-builder.model.ts" />
+/// <reference path="./user-builder.ts" />
 var Users;
+/// <reference path="./user-builder.ts" />
 (function (Users) {
     class UserModel {
         constructor(builder) {
@@ -56,8 +117,10 @@ var Users;
     Users.UserModel = UserModel;
 })(Users || (Users = {}));
 /// <reference path="../models/user.model.ts" />
-/// <reference path="../models/student-builder.model.ts" />
+/// <reference path="../builder/student-builder.ts" />
 var Users;
+/// <reference path="../models/user.model.ts" />
+/// <reference path="../builder/student-builder.ts" />
 (function (Users) {
     class Student extends Users.UserModel {
         constructor(builder) {
@@ -69,11 +132,13 @@ var Users;
     }
     Users.Student = Student;
 })(Users || (Users = {}));
-/// <reference path="../models/student-builder.model.ts" />
 /// <reference path="../users/student.ts" />
+/// <reference path="./models/user-builder.ts">
 var Users;
+/// <reference path="../users/student.ts" />
+/// <reference path="./models/user-builder.ts">
 (function (Users) {
-    class StudentBuilder extends Users.StudentBuilderModel {
+    class StudentBuilder extends Users.UserBuilderModel {
         constructor() {
             super();
             this.role = 'Student';
@@ -96,20 +161,11 @@ var Users;
     }
     Users.StudentBuilder = StudentBuilder;
 })(Users || (Users = {}));
-// <reference path="./a-user-builder.model.ts">
-var Users;
-(function (Users) {
-    // @ts-ignore
-    class TeacherBuilderModel extends Users.UserBuilderModel {
-        addGrade(grade) { }
-        addSpecialization(specialization) { }
-        addDepartment(department) { }
-    }
-    Users.TeacherBuilderModel = TeacherBuilderModel;
-})(Users || (Users = {}));
 /// <reference path="../models/user.model.ts" />
-/// <reference path="../models/teacher-builder.model.ts" />
+/// <reference path="../builder/teacher-builder.ts" />
 var Users;
+/// <reference path="../models/user.model.ts" />
+/// <reference path="../builder/teacher-builder.ts" />
 (function (Users) {
     class Teacher extends Users.UserModel {
         constructor(builder) {
@@ -121,11 +177,13 @@ var Users;
     }
     Users.Teacher = Teacher;
 })(Users || (Users = {}));
-/// <reference path="../models/teacher-builder.model.ts" />
 /// <reference path="../users/teacher.ts" />
+/// <reference path="./models/user-builder.ts">
 var Users;
+/// <reference path="../users/teacher.ts" />
+/// <reference path="./models/user-builder.ts">
 (function (Users) {
-    class TeacherBuilder extends Users.TeacherBuilderModel {
+    class TeacherBuilder extends Users.UserBuilderModel {
         constructor() {
             super();
             this.role = 'Teacher';
@@ -148,19 +206,13 @@ var Users;
     }
     Users.TeacherBuilder = TeacherBuilder;
 })(Users || (Users = {}));
-// <reference path="./a-user-builder.model.ts">
-// <reference path="./types/types.ts">
-var Users;
-(function (Users) {
-    class AdministratorBuilderModel extends Users.UserBuilderModel {
-        addAdministratorLevel(administratorLevel) { }
-    }
-    Users.AdministratorBuilderModel = AdministratorBuilderModel;
-})(Users || (Users = {}));
 /// <reference path="../models/user.model.ts" />
-/// <reference path="../models/administrator-builder.model.ts" />
+/// <reference path="../builder/administrator-builder.ts" />
 // <reference path="./types/types.ts">
 var Users;
+/// <reference path="../models/user.model.ts" />
+/// <reference path="../builder/administrator-builder.ts" />
+// <reference path="./types/types.ts">
 (function (Users) {
     class Administrator extends Users.UserModel {
         constructor(builder) {
@@ -189,12 +241,15 @@ var Users;
     }
     Users.Administrator = Administrator;
 })(Users || (Users = {}));
-/// <reference path="../models/administrator-builder.model.ts" />
 /// <reference path="../users/administrator.ts" />
-// <reference path="./types/types.ts">
+/// <reference path="./types/types.ts">
+/// <reference path="./models/user-builder.ts">
 var Users;
+/// <reference path="../users/administrator.ts" />
+/// <reference path="./types/types.ts">
+/// <reference path="./models/user-builder.ts">
 (function (Users) {
-    class AdministratorBuilder extends Users.AdministratorBuilderModel {
+    class AdministratorBuilder extends Users.UserBuilderModel {
         constructor() {
             super();
             this.role = 'Administrator';
@@ -210,6 +265,8 @@ var Users;
     Users.AdministratorBuilder = AdministratorBuilder;
 })(Users || (Users = {}));
 /// <reference path="./storage/users-storage.ts" />
+/// <reference path="./types/types.ts" />
+/// <reference path="./iterators/users-iterator.ts" />
 /// <reference path="./builder/student-builder.ts" />
 /// <reference path="./builder/teacher-builder.ts" />
 /// <reference path="./builder/administrator-builder.ts" />
@@ -217,6 +274,15 @@ var Users;
 /// <reference path="./users/student.ts" />
 /// <reference path="./users/teacher.ts" />
 var Users;
+/// <reference path="./storage/users-storage.ts" />
+/// <reference path="./types/types.ts" />
+/// <reference path="./iterators/users-iterator.ts" />
+/// <reference path="./builder/student-builder.ts" />
+/// <reference path="./builder/teacher-builder.ts" />
+/// <reference path="./builder/administrator-builder.ts" />
+/// <reference path="./users/administrator.ts" />
+/// <reference path="./users/student.ts" />
+/// <reference path="./users/teacher.ts" />
 (function (Users) {
     class UsersCRUD {
         constructor() {
@@ -233,6 +299,7 @@ var Users;
             studentBuilder.addGender(gender);
             const student = studentBuilder.createUser();
             this.storage.addUser(student);
+            return student;
         }
         addTeacher(department, specialization, grade, firstName, lastName, age, gender) {
             const teacherBuilder = new Users.TeacherBuilder();
@@ -245,50 +312,40 @@ var Users;
             teacherBuilder.addGender(gender);
             const teacher = teacherBuilder.createUser();
             this.storage.addUser(teacher);
+            return teacher;
         }
-        addAdministrator(firstName, lastName, age, gender) {
+        addAdministrator(firstName, lastName, age, gender, administratorLevel) {
             const administratorBuilder = new Users.AdministratorBuilder();
             administratorBuilder.addFirstName(firstName);
             administratorBuilder.addLastName(lastName);
             administratorBuilder.addAge(age);
             administratorBuilder.addGender(gender);
+            administratorBuilder.addAdministratorLevel(administratorLevel);
             const administrator = administratorBuilder.createUser();
             this.storage.addUser(administrator);
+            return administrator;
+        }
+        changeUserById(id, key, value) {
+            this.storage.changeUserById(id, key, value);
+        }
+        deleteUserById(id) {
+            this.storage.deleteUserById(id);
         }
     }
     const usersController = new UsersCRUD();
     usersController.addStudent('Medicine', 'a8.14', 'Doctor', 'Bob', 'Chan', 19, 'male');
     usersController.addTeacher('Health and Social Security', 'Anesthesiology', 'Teacher Training Centre', 'Tatyana', 'Nepomniachtchiya', 42, 'female');
-    usersController.addAdministrator('Ted', 'Lasso', 34, 'male');
+    const Administrator = usersController.addAdministrator('Ted', 'Lasso', 34, 'male', Users.administratorLevels.advanced);
     console.log(usersController.storage.getUsers());
-})(Users || (Users = {}));
-var Users;
-(function (Users) {
-    class UserBuilderModel {
-        createUser() { }
-        addFirstName(firstName) {
-            this.firstName = firstName;
+    Administrator.changeUserById(Administrator.id, 'age', 35);
+    console.log(usersController.storage.getUsers());
+    usersController.deleteUserById(Administrator.id);
+    console.log(usersController.storage.getUsers());
+    const iterator = usersController.storage.createIterator();
+    while (iterator.hasNext()) {
+        if (iterator.current().role === `Teacher`) {
+            console.log(`${iterator.current().firstName} ${iterator.current().lastName}`);
         }
-        addLastName(lastName) {
-            this.lastName = lastName;
-        }
-        addAge(age) {
-            this.age = age;
-        }
-        addGender(gender) {
-            this.gender = gender;
-        }
+        iterator.next();
     }
-    Users.UserBuilderModel = UserBuilderModel;
-})(Users || (Users = {}));
-//<reference path="../users/student">
-//<reference path="../users/teacher">
-//<reference path="../users/administrator">
-var Users;
-(function (Users) {
-    let administratorLevels;
-    (function (administratorLevels) {
-        administratorLevels[administratorLevels["basic"] = 0] = "basic";
-        administratorLevels[administratorLevels["advanced"] = 1] = "advanced";
-    })(administratorLevels = Users.administratorLevels || (Users.administratorLevels = {}));
 })(Users || (Users = {}));

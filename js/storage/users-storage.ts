@@ -1,7 +1,8 @@
 //<reference path="../types/types.ts">
+//<reference path="../iterators/users-iterator.ts">
 
 namespace Users{
-    export class UsersStorage {
+    export class UsersStorage implements IUsersStorage {
         private static instance: UsersStorage;
 
         public static getInstance(): UsersStorage {
@@ -27,11 +28,23 @@ namespace Users{
         }
 
         public deleteUserById(id: number) {
-            this.users.filter(user => user.id !== id)
+            this.users = this.users.filter(user => user.id !== id)
         }
 
         public getUsers(): usersType[] {
             return this.users;
+        }
+
+        public getUserByPosition(position: number): usersType {
+            return this.users[position];
+        }
+
+        public count(): number {
+            return this.users.length;
+        }
+
+        createIterator(): UsersIterator {
+            return new UsersIterator(this);
         }
     }
 }

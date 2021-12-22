@@ -1,4 +1,6 @@
 /// <reference path="./storage/users-storage.ts" />
+/// <reference path="./types/types.ts" />
+/// <reference path="./iterators/users-iterator.ts" />
 /// <reference path="./builder/student-builder.ts" />
 /// <reference path="./builder/teacher-builder.ts" />
 /// <reference path="./builder/administrator-builder.ts" />
@@ -22,7 +24,7 @@ namespace Users {
             lastName: string,
             age: number,
             gender: string,
-        ) {
+        ): Student {
             const studentBuilder = new StudentBuilder();
 
             studentBuilder.addFaculty(faculty);
@@ -36,6 +38,8 @@ namespace Users {
             const student = studentBuilder.createUser()
 
             this.storage.addUser(student);
+
+            return student
         }
 
         addTeacher(
@@ -46,7 +50,7 @@ namespace Users {
             lastName: string,
             age: number,
             gender: string,
-        ) {
+        ): Teacher {
             const teacherBuilder = new TeacherBuilder();
 
             teacherBuilder.addDepartment(department);
@@ -60,6 +64,8 @@ namespace Users {
             const teacher = teacherBuilder.createUser()
 
             this.storage.addUser(teacher);
+
+            return teacher
         }
 
         addAdministrator(
@@ -67,17 +73,30 @@ namespace Users {
             lastName: string,
             age: number,
             gender: string,
-        ) {
+            administratorLevel: administratorLevels
+        ): Administrator {
             const administratorBuilder = new AdministratorBuilder();
 
             administratorBuilder.addFirstName(firstName);
             administratorBuilder.addLastName(lastName);
             administratorBuilder.addAge(age);
             administratorBuilder.addGender(gender);
+            administratorBuilder.addAdministratorLevel(administratorLevel);
 
             const administrator = administratorBuilder.createUser();
 
             this.storage.addUser(administrator);
+
+            return administrator;
+        }
+
+        changeUserById(id: number, key: string, value: number | string) {
+            this.storage.changeUserById(id, key, value);
+
+        }
+
+        deleteUserById(id: number) {
+            this.storage.deleteUserById(id);
         }
     }
 
@@ -103,12 +122,30 @@ namespace Users {
         'female'
     );
 
-    usersController.addAdministrator(
+    const Administrator = usersController.addAdministrator(
         'Ted',
         'Lasso',
         34,
-        'male'
+        'male',
+        administratorLevels.advanced
     );
 
     console.log(usersController.storage.getUsers());
+
+    Administrator.changeUserById(Administrator.id, 'age', 35);
+
+    console.log(usersController.storage.getUsers());
+
+    usersController.deleteUserById(Administrator.id);
+
+    console.log(usersController.storage.getUsers());
+
+    const  iterator = usersController.storage.createIterator()
+    while(iterator.hasNext()) {
+        if(iterator.current().role === `Teacher`) {
+            console.log(`${iterator.current().firstName} ${iterator.current().lastName}`)
+        }
+
+        iterator.next()
+    }
 }

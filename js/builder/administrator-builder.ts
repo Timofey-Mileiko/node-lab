@@ -1,9 +1,11 @@
-/// <reference path="../models/administrator-builder.model.ts" />
 /// <reference path="../users/administrator.ts" />
-// <reference path="./types/types.ts">
+/// <reference path="./types/types.ts">
+/// <reference path="./models/user-builder.ts">
 
 namespace Users {
-    export class AdministratorBuilder extends AdministratorBuilderModel{
+    export class AdministratorBuilder extends UserBuilderModel{
+        administratorLevel: administratorLevels;
+
         constructor() {
             super();
             this.role = 'Administrator';

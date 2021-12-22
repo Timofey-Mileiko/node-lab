@@ -1,8 +1,12 @@
-/// <reference path="../models/student-builder.model.ts" />
 /// <reference path="../users/student.ts" />
+/// <reference path="./models/user-builder.ts">
 
 namespace Users {
-    export class StudentBuilder extends StudentBuilderModel{
+    export class StudentBuilder extends UserBuilderModel {
+        faculty: string;
+        group: string;
+        speciality: string;
+
         constructor() {
             super();
             this.role = 'Student';

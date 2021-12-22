@@ -1,5 +1,5 @@
 /// <reference path="../models/user.model.ts" />
-/// <reference path="../models/teacher-builder.model.ts" />
+/// <reference path="../builder/teacher-builder.ts" />
 
 namespace Users {
     export class Teacher extends UserModel {
@@ -7,7 +7,7 @@ namespace Users {
         specialization: string;
         department: string;
 
-        constructor(builder: TeacherBuilderModel) {
+        constructor(builder: TeacherBuilder) {
             super(builder);
 
             this.grade = builder.grade;

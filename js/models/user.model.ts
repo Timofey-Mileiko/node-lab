@@ -1,4 +1,4 @@
-/// <reference path="./user-builder.model.ts" />
+/// <reference path="./user-builder.ts" />
 
 namespace Users {
     export class UserModel {
