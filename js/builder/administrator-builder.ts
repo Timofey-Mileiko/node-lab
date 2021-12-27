@@ -4,21 +4,19 @@
 
 namespace Users {
     export class AdministratorBuilder extends UserBuilderModel{
-        administratorLevel: administratorLevels;
+        protected user: Administrator = new Administrator();
 
         constructor() {
             super();
-            this.role = 'Administrator';
+            this.user.role = 'Administrator';
         }
 
-        public addAdministratorLevel(administratorLevel: administratorLevels): AdministratorBuilder {
-            this.administratorLevel = administratorLevel;
-
-            return this;
+        public addAdministratorLevel(administratorLevel: administratorLevels) {
+            this.user.administratorLevel = administratorLevel;
         }
 
-        public createUser() {
-            return new Administrator(this);
+        public createUser(): Administrator {
+            return this.user;
         }
     }
 }

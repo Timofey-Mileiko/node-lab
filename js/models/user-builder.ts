@@ -1,27 +1,25 @@
+/// <reference path="./models/user.model.ts">
+
 namespace Users {
     export abstract class UserBuilderModel {
-        public firstName: string;
-        public lastName: string;
-        public age: number;
-        public gender: string;
-        public role: string;
+        protected user: UserModel
 
-        public createUser() {}
+        public build() {}
 
         public addFirstName(firstName: string) {
-            this.firstName = firstName;
+            this.user.firstName = firstName;
         }
 
         public addLastName(lastName: string) {
-            this.lastName = lastName;
+            this.user.lastName = lastName;
         }
 
         public addAge(age: number) {
-            this.age = age;
+            this.user.age = age;
         }
 
         public addGender (gender: string) {
-            this.gender = gender;
+            this.user.gender = gender;
         }
     }
 }

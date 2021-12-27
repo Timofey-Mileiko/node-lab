@@ -2,6 +2,7 @@
 /// <reference path="../users/teacher">
 /// <reference path="../users/administrator">
 /// <reference path="../storage/users-storage.ts">
+/// <reference path="./models/user.model.ts">
 
 namespace Users {
     export enum administratorLevels {
@@ -9,14 +10,12 @@ namespace Users {
         advanced,
     }
 
-    export type usersType = Student | Teacher | Administrator;
-
     export interface IUsersStorage {
-        addUser(user: usersType): void;
+        addUser(user: UserModel): void;
         changeUserById(id: number, key: string, value: string | number): void;
         deleteUserById(id: number): void;
-        getUsers(): usersType[];
-        getUserByPosition(position: number): usersType;
+        getUsers(): UserModel[];
+        getUserByPosition(position: number): UserModel;
         count(): number;
     }
 }

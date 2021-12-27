@@ -7,12 +7,8 @@ namespace Users {
         public group: string;
         public speciality: string;
 
-        constructor(builder: StudentBuilder) {
-            super(builder);
-
-            this.faculty = builder.faculty;
-            this.group = builder.group;
-            this.speciality = builder.speciality;
+        constructor() {
+            super();
         }
     }
 }

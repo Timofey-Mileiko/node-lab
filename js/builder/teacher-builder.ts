@@ -3,36 +3,27 @@
 
 namespace Users {
     export class TeacherBuilder extends UserBuilderModel{
-        grade: string;
-        specialization: string;
-        department: string;
+        protected user: Teacher = new Teacher();
 
         constructor() {
             super();
-            this.role = 'Teacher';
+            this.user.role = 'Teacher';
         }
 
-        public addGrade(grade: string): TeacherBuilder {
-            this.grade = grade;
-
-            return this;
+        public addGrade(grade: string) {
+            this.user.grade = grade;
         }
 
-        public addSpecialization(specialization: string): TeacherBuilder {
-            this.specialization = specialization;
-
-            return this;
+        public addSpecialization(specialization: string) {
+            this.user.specialization = specialization;
         }
 
         public addDepartment(department: string) {
-            this.department = department
-
-            return this;
+            this.user.department = department;
         }
 
-        public createUser() {
-            return new Teacher(this);
+        public build(): Teacher {
+            return this.user;
         }
-
     }
 }

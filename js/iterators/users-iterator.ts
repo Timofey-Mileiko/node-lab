@@ -1,5 +1,6 @@
 /// <request path="../storage/user-storage.ts">
 /// <request path="../types/types.ts">
+/// <reference path="./models/user.model.ts">
 
 namespace Users{
     export class UsersIterator {
@@ -8,7 +9,7 @@ namespace Users{
         constructor(private aggregator: UsersStorage) {
         }
 
-        public current(): usersType {
+        public current(): UserModel {
             return this.aggregator.getUserByPosition(this.position);
         }
 

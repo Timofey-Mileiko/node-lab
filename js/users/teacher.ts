@@ -7,12 +7,8 @@ namespace Users {
         specialization: string;
         department: string;
 
-        constructor(builder: TeacherBuilder) {
-            super(builder);
-
-            this.grade = builder.grade;
-            this.specialization = builder.specialization;
-            this.department = builder.department;
+        constructor() {
+            super();
         }
     }
 }

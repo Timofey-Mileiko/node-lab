@@ -13,29 +13,26 @@ namespace Users{
             return UsersStorage.instance;
         }
 
-        private users: usersType[] & { [key: string]: any }[] = [];
+        private users: UserModel[] = [];// & { [key: string]: any }[]
 
-        public addUser(user: usersType){
+        public addUser(user: UserModel){
             this.users.push(user);
         }
 
         public changeUserById(id: number, key: string, value: string | number) {
-            const currentUser: any = this.users.filter(user => user.id === id)[0];
-            currentUser[key]  = value;
-
-            this.users = this.users.filter(user => user.id !== id);
-            this.users.push(currentUser);
+            const currentUser: any = this.users.find(user => user.id === id);
+            currentUser[key] = value;
         }
 
         public deleteUserById(id: number) {
             this.users = this.users.filter(user => user.id !== id)
         }
 
-        public getUsers(): usersType[] {
+        public getUsers(): UserModel[] {
             return this.users;
         }
 
-        public getUserByPosition(position: number): usersType {
+        public getUserByPosition(position: number): UserModel {
             return this.users[position];
         }
 

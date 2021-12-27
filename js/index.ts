@@ -35,7 +35,7 @@ namespace Users {
             studentBuilder.addAge(age);
             studentBuilder.addGender(gender);
 
-            const student = studentBuilder.createUser()
+            const student = studentBuilder.build()
 
             this.storage.addUser(student);
 
@@ -61,7 +61,7 @@ namespace Users {
             teacherBuilder.addAge(age);
             teacherBuilder.addGender(gender);
 
-            const teacher = teacherBuilder.createUser()
+            const teacher = teacherBuilder.build()
 
             this.storage.addUser(teacher);
 
@@ -132,7 +132,7 @@ namespace Users {
 
     console.log(usersController.storage.getUsers());
 
-    Administrator.changeUserById(Administrator.id, 'age', 35);
+    usersController.changeUserById(Administrator.id, 'age', 35);
 
     console.log(usersController.storage.getUsers());
 
