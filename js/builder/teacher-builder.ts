@@ -1,8 +1,7 @@
-/// <reference path="../users/teacher.ts" />
-/// <reference path="./models/user-builder.ts">
+import UserBuilderModel from "../models/user-builder";
+import Teacher from "../users/teacher";
 
-namespace Users {
-    export class TeacherBuilder extends UserBuilderModel{
+export default class TeacherBuilder extends UserBuilderModel{
         protected user: Teacher = new Teacher();
 
         constructor() {
@@ -26,4 +25,3 @@ namespace Users {
             return this.user;
         }
     }
-}

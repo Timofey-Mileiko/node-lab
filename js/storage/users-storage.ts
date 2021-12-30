@@ -1,47 +1,46 @@
-//<reference path="../types/types.ts">
-//<reference path="../iterators/users-iterator.ts">
+import {IUsersStorage} from "../types/types";
+import User from "../models/user";
+import UsersIterator from "../iterators/users-iterator";
 
-namespace Users{
-    export class UsersStorage implements IUsersStorage {
-        private static instance: UsersStorage;
+export default class UsersStorage implements IUsersStorage {
+    private static instance: UsersStorage;
 
-        public static getInstance(): UsersStorage {
-            if(!UsersStorage.instance){
-                UsersStorage.instance = new UsersStorage();
-            }
-
-            return UsersStorage.instance;
+    public static getInstance(): UsersStorage {
+        if(!UsersStorage.instance){
+            UsersStorage.instance = new UsersStorage();
         }
 
-        private users: UserModel[] = [];// & { [key: string]: any }[]
+        return UsersStorage.instance;
+    }
 
-        public addUser(user: UserModel){
-            this.users.push(user);
-        }
+    private users: User[] = [];// & { [key: string]: any }[]
 
-        public changeUserById(id: number, key: string, value: string | number) {
-            const currentUser: any = this.users.find(user => user.id === id);
-            currentUser[key] = value;
-        }
+    public addUser(user: User){
+        this.users.push(user);
+    }
 
-        public deleteUserById(id: number) {
-            this.users = this.users.filter(user => user.id !== id)
-        }
+    public changeUserById(id: number, key: string, value: string | number) {
+        const currentUser: any = this.users.find(user => user.id === id);
+        currentUser[key] = value;
+    }
 
-        public getUsers(): UserModel[] {
-            return this.users;
-        }
+    public deleteUserById(id: number) {
+        this.users = this.users.filter(user => user.id !== id)
+    }
 
-        public getUserByPosition(position: number): UserModel {
-            return this.users[position];
-        }
+    public getUsers(): User[] {
+        return this.users;
+    }
 
-        public count(): number {
-            return this.users.length;
-        }
+    public getUserByPosition(position: number): User {
+        return this.users[position];
+    }
 
-        createIterator(): UsersIterator {
-            return new UsersIterator(this);
-        }
+    public count(): number {
+        return this.users.length;
+    }
+
+    createIterator(): UsersIterator {
+        return new UsersIterator(this);
     }
 }

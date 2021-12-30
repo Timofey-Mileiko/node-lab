@@ -1,22 +1,20 @@
-/// <reference path="../users/administrator.ts" />
-/// <reference path="./types/types.ts">
-/// <reference path="./models/user-builder.ts">
+import UserBuilderModel from "../models/user-builder";
+import Administrator from "../users/administrator";
+import {administratorLevels} from "../types/types";
 
-namespace Users {
-    export class AdministratorBuilder extends UserBuilderModel{
-        protected user: Administrator = new Administrator();
+export default class AdministratorBuilder extends UserBuilderModel{
+    protected user: Administrator = new Administrator();
 
-        constructor() {
-            super();
-            this.user.role = 'Administrator';
-        }
+    constructor() {
+        super();
+        this.user.role = 'Administrator';
+    }
 
-        public addAdministratorLevel(administratorLevel: administratorLevels) {
-            this.user.administratorLevel = administratorLevel;
-        }
+    public addAdministratorLevel(administratorLevel: administratorLevels) {
+        this.user.administratorLevel = administratorLevel;
+    }
 
-        public createUser(): Administrator {
-            return this.user;
-        }
+    public build(): Administrator {
+        return this.user;
     }
 }

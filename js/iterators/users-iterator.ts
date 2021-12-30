@@ -1,24 +1,22 @@
-/// <request path="../storage/user-storage.ts">
-/// <request path="../types/types.ts">
-/// <reference path="./models/user.model.ts">
 
-namespace Users{
-    export class UsersIterator {
-        private position: number = 0;
+import UsersStorage from "../storage/users-storage";
+import UserModel from "../models/user";
 
-        constructor(private aggregator: UsersStorage) {
-        }
+export default class UsersIterator {
+    private position: number = 0;
 
-        public current(): UserModel {
-            return this.aggregator.getUserByPosition(this.position);
-        }
+    constructor(private aggregator: UsersStorage) {
+    }
 
-        public next(): void {
-            this.position++
-        }
+    public current(): UserModel {
+        return this.aggregator.getUserByPosition(this.position);
+    }
 
-        public hasNext(): boolean{
-            return this.position < this.aggregator.count()
-        }
+    public next(): void {
+        this.position++
+    }
+
+    public hasNext(): boolean{
+        return this.position < this.aggregator.count()
     }
 }

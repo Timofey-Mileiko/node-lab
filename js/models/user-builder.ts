@@ -1,25 +1,24 @@
-/// <reference path="./models/user.model.ts">
+import User from "./user";
 
-namespace Users {
-    export abstract class UserBuilderModel {
-        protected user: UserModel
 
-        public build() {}
+export default abstract class UserBuilderModel {
+    protected user: User
 
-        public addFirstName(firstName: string) {
-            this.user.firstName = firstName;
-        }
+    public build() {}
 
-        public addLastName(lastName: string) {
-            this.user.lastName = lastName;
-        }
+    public addFirstName(firstName: string) {
+        this.user.firstName = firstName;
+    }
 
-        public addAge(age: number) {
-            this.user.age = age;
-        }
+    public addLastName(lastName: string) {
+        this.user.lastName = lastName;
+    }
 
-        public addGender (gender: string) {
-            this.user.gender = gender;
-        }
+    public addAge(age: number) {
+        this.user.age = age;
+    }
+
+    public addGender (gender: string) {
+        this.user.gender = gender;
     }
 }
