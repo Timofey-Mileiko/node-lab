@@ -1,14 +1,11 @@
-/// <reference path="../models/user.model.ts" />
-/// <reference path="../builder/teacher-builder.ts" />
+import User from "../models/user";
 
-namespace Users {
-    export class Teacher extends UserModel {
-        grade: string;
-        specialization: string;
-        department: string;
+export default class Teacher extends User {
+    grade: string;
+    specialization: string;
+    department: string;
 
-        constructor() {
-            super();
-        }
+    constructor() {
+        super();
     }
 }

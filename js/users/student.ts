@@ -1,14 +1,11 @@
-/// <reference path="../models/user.model.ts" />
-/// <reference path="../builder/student-builder.ts" />
+import User from "../models/user";
 
-namespace Users {
-    export class Student extends UserModel {
-        public faculty: string;
-        public group: string;
-        public speciality: string;
+export default class Student extends User {
+    public faculty: string;
+    public group: string;
+    public speciality: string;
 
-        constructor() {
-            super();
-        }
+    constructor() {
+        super();
     }
 }

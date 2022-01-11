@@ -1,13 +1,11 @@
-/// <reference path="../models/user.model.ts" />
-/// <reference path="../builder/administrator-builder.ts" />
-// <reference path="./types/types.ts">
+import User from "../models/user";
+import {administratorLevels} from "../types/types";
 
-namespace Users {
-    export class Administrator extends UserModel {
-        administratorLevel: administratorLevels
 
-        constructor() {
-            super();
-        }
+export default class Administrator extends User {
+    administratorLevel: administratorLevels;
+
+    constructor() {
+        super();
     }
 }

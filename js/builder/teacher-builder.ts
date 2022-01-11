@@ -1,13 +1,13 @@
-/// <reference path="../users/teacher.ts" />
-/// <reference path="./models/user-builder.ts">
+import UserBuilderModel from "../models/user-builder";
+import Teacher from "../users/teacher";
 
-namespace Users {
-    export class TeacherBuilder extends UserBuilderModel{
+export default class TeacherBuilder extends UserBuilderModel{
         protected user: Teacher = new Teacher();
 
         constructor() {
             super();
             this.user.role = 'Teacher';
+            this.user.id = Math.floor(Math.random() * 101);
         }
 
         public addGrade(grade: string) {
@@ -26,4 +26,3 @@ namespace Users {
             return this.user;
         }
     }
-}
