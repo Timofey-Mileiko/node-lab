@@ -11,25 +11,25 @@ describe('Student', () => {
     it('Student has "Medicine" faculty.', () => {
         studentBuilder.addFaculty('Medicine');
 
-        const teacher: Student = studentBuilder.build();
+        const student: Student = studentBuilder.build();
 
-        expect(teacher.faculty).toBe('Medicine');
+        expect(student.faculty).toBe('Medicine');
     });
 
     it('Student has "a8.14" group.', () => {
         studentBuilder.addGroup('a8.14');
 
-        const teacher: Student = studentBuilder.build();
+        const student: Student = studentBuilder.build();
 
-        expect(teacher.group).toBe('a8.14');
+        expect(student.group).toBe('a8.14');
     });
 
     it('Student has "Doctor" specialization.', () => {
         studentBuilder.addSpeciality('Doctor');
 
-        const teacher: Student = studentBuilder.build();
+        const student: Student = studentBuilder.build();
 
-        expect(teacher.speciality).toBe('Doctor');
+        expect(student.speciality).toBe('Doctor');
     });
 });
 

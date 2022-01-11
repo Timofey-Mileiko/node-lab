@@ -7,6 +7,7 @@ export default class StudentBuilder extends UserBuilderModel {
     constructor() {
         super();
         this.user.role = 'Student';
+        this.user.id = Math.floor(Math.random() * 101);
     }
 
     public addFaculty(faculty: string) {

@@ -7,6 +7,7 @@ export default class TeacherBuilder extends UserBuilderModel{
         constructor() {
             super();
             this.user.role = 'Teacher';
+            this.user.id = Math.floor(Math.random() * 101);
         }
 
         public addGrade(grade: string) {

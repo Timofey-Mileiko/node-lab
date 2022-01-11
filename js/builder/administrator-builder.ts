@@ -8,6 +8,7 @@ export default class AdministratorBuilder extends UserBuilderModel{
     constructor() {
         super();
         this.user.role = 'Administrator';
+        this.user.id = Math.floor(Math.random() * 101);
     }
 
     public addAdministratorLevel(administratorLevel: administratorLevels) {

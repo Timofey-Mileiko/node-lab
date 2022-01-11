@@ -13,7 +13,7 @@ export default class UsersStorage implements IUsersStorage {
         return UsersStorage.instance;
     }
 
-    private users: User[] = [];// & { [key: string]: any }[]
+    private users: User[] = [];
 
     public addUser(user: User){
         this.users.push(user);
