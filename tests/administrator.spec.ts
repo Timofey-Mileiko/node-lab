@@ -1,4 +1,4 @@
-import AdministratorBuilder from "../js/builder/administrator-builder";
+import AdministratorBuilder from "../js/builders/administrator-builder";
 import Administrator from "../js/users/administrator";
 import {administratorLevels} from "../js/types/types";
 

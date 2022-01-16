@@ -1,7 +1,7 @@
-import LessonBuilder from "../js/builder/lesson-builder";
+import LessonBuilder from "../js/builders/lesson-builder";
 import Teacher from "../js/users/teacher";
 import Lesson from "../js/models/lesson";
-import TeacherBuilder from "../js/builder/teacher-builder";
+import TeacherBuilder from "../js/builders/teacher-builder";
 import LessonsStorage from "../js/storage/lessons-storage";
 import User from "../js/models/user";
 
@@ -10,49 +10,21 @@ describe('Lesson', () => {
     let secondLessonBuilder: LessonBuilder;
     let firstLesson: Lesson;
     let secondLesson: Lesson;
-    let firstTeacher: Teacher;
-    let secondTeacher: Teacher;
-    let firstTeacherBuilder: TeacherBuilder;
-    let secondTeacherBuilder: TeacherBuilder;
     let storage: LessonsStorage;
 
     beforeEach(() => {
-        firstTeacherBuilder = new TeacherBuilder();
-
-        firstTeacherBuilder.addDepartment('Health and Social Security');
-        firstTeacherBuilder.addSpecialization('Anesthesiology');
-        firstTeacherBuilder.addGrade('Teacher Training Centre');
-        firstTeacherBuilder.addFirstName('Tatyana');
-        firstTeacherBuilder.addLastName('Nepomniachtchiya');
-        firstTeacherBuilder.addAge(42);
-        firstTeacherBuilder.addGender('female');
-
-        secondTeacherBuilder = new TeacherBuilder();
-
-        secondTeacherBuilder.addDepartment('Colon and rectal surgeon');
-        secondTeacherBuilder.addSpecialization('Cardiologist');
-        secondTeacherBuilder.addGrade('Dnipro Medical Institute');
-        secondTeacherBuilder.addFirstName('Pauline');
-        secondTeacherBuilder.addLastName('Johnson');
-        secondTeacherBuilder.addAge(45);
-        secondTeacherBuilder.addGender('female');
-
-        firstTeacher = firstTeacherBuilder.build();
-        secondTeacher = secondTeacherBuilder.build();
-
         firstLessonBuilder = new LessonBuilder();
         secondLessonBuilder = new LessonBuilder();
 
+        firstLessonBuilder.addName('Chemistry');
+        firstLessonBuilder.addCourse('Medicine');
+        firstLessonBuilder.addType('lecture');
+        firstLessonBuilder.addDate('01/12/2022');
 
-        firstLessonBuilder.addTeacher(firstTeacher);
-        firstLessonBuilder.addTime('16:45');
-        firstLessonBuilder.addSubject('Chemistry');
-        firstLessonBuilder.addClassroom('302b');
-
-        secondLessonBuilder.addTeacher(secondTeacher);
-        secondLessonBuilder.addTime('16:35');
-        secondLessonBuilder.addSubject('Chemistry');
-        secondLessonBuilder.addClassroom('302b');
+        secondLessonBuilder.addName('Math');
+        secondLessonBuilder.addCourse('Programming');
+        secondLessonBuilder.addType('workshop');
+        secondLessonBuilder.addDate('02/12/2022');
 
         firstLesson = firstLessonBuilder.build();
         secondLesson = secondLessonBuilder.build();
@@ -74,7 +46,7 @@ describe('Lesson', () => {
 
         expect(oldLesson).toMatchObject(storage.getLessons()[0]);
 
-        storage.changeLessonById(firstLesson.id, 'time', '12:00');
+        storage.changeLessonById(firstLesson.id, 'date', '04/12/2022');
 
         expect(oldLesson).not.toMatchObject(storage.getLessons()[0]);
     });

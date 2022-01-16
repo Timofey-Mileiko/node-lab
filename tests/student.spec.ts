@@ -1,4 +1,4 @@
-import StudentBuilder from "../js/builder/student-builder";
+import StudentBuilder from "../js/builders/student-builder";
 import Student from "../js/users/student";
 
 describe('Student', () => {

@@ -1,11 +1,11 @@
 import UsersStorage from "./storage/users-storage";
-import StudentBuilder from "./builder/student-builder";
+import StudentBuilder from "./builders/student-builder";
 import Student from "./users/student";
 import Teacher from "./users/teacher";
 import Administrator from "./users/administrator";
-import TeacherBuilder from "./builder/teacher-builder";
+import TeacherBuilder from "./builders/teacher-builder";
 import {administratorLevels} from "./types/types";
-import AdministratorBuilder from "./builder/administrator-builder";
+import AdministratorBuilder from "./builders/administrator-builder";
 
 class UsersCRUD {
     storage: UsersStorage
