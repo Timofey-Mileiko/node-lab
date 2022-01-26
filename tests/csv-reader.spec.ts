@@ -1,8 +1,8 @@
-import CsvFilesReader from "../js/csv-files-reader";
-import LessonBuilder from "../js/builders/lesson-builder";
-import Lesson from "../js/models/lesson";
-import LessonsStorage from "../js/storage/lessons-storage";
+import {LessonsStorage} from "../src/lesson/storage";
+import {Lesson} from "../src/lesson/types/models";
+import CsvFilesReader from "../src/common/csv-files-reader";
 import expectedData from "./expected-data/lessons";
+import {LessonBuilder} from "../src/lesson/builders";
 
 describe('CSV reader', () => {
     let lessonsStorage: LessonsStorage;

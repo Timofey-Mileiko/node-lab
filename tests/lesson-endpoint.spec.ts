@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from "../src/app";
-import LessonsStorage from "../js/storage/lessons-storage";
 import expectedData from "./expected-data/lessons";
+import {LessonsStorage} from "../src/lesson/storage";
 
 test('Should create lessons from uploaded csv file', async () => {
     await request(app)

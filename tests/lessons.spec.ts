@@ -1,5 +1,5 @@
-import LessonBuilder from "../js/builders/lesson-builder";
-import Lesson from "../js/models/lesson";
+import {LessonBuilder} from "../src/lesson/builders";
+import {Lesson} from "../src/lesson/types/models";
 
 describe('Lesson', () => {
     let lessonBuilder: LessonBuilder;

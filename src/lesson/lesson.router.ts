@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { NamedRouter } from '../common/types/tuples'
 import {lessonService} from './lesson.service';
 import fs from 'fs';
-import CsvFilesReader from "../../js/csv-files-reader";
+import CsvFilesReader from "../common/csv-files-reader";
 
 const router = Router()
 

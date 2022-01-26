@@ -1,9 +1,6 @@
-import LessonBuilder from "../js/builders/lesson-builder";
-import Teacher from "../js/users/teacher";
-import Lesson from "../js/models/lesson";
-import TeacherBuilder from "../js/builders/teacher-builder";
-import LessonsStorage from "../js/storage/lessons-storage";
-import User from "../js/models/user";
+import {LessonBuilder} from "../src/lesson/builders";
+import {Lesson} from "../src/lesson/types/models";
+import {LessonsStorage} from "../src/lesson/storage";
 
 describe('Lesson', () => {
     let firstLessonBuilder: LessonBuilder;

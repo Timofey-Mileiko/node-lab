@@ -1,14 +1,11 @@
-import Lesson from "../../js/models/lesson";
-import LessonBuilder from "../../js/builders/lesson-builder";
-import LessonsStorage from "../../js/storage/lessons-storage";
+import {Lesson} from "./types/models";
+import {LessonBuilder} from "./builders";
+import {LessonsStorage} from "./storage";
 
 const lessonsStorage = LessonsStorage.getInstance();
 
 export default class LessonService {
-    private readonly users: Lesson[] = []
-
     create(lessons: Lesson[] | void) {
-
         if(lessons) {
             lessons.forEach((lesson) => {
                 const lessonBuilder = new LessonBuilder();

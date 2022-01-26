@@ -1,5 +1,5 @@
-import TeacherBuilder from "../js/builders/teacher-builder";
-import Teacher from "../js/users/teacher";
+import {TeacherBuilder} from "../src/user/builders";
+import {Teacher} from "../src/user/types/users";
 
 describe('Teacher', () => {
     let teacherBuilder: TeacherBuilder;
