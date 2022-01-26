@@ -1,4 +1,5 @@
 export default {
+    verbose: true,
     moduleFileExtensions: ["js", "ts"],
     transform: {
         "^.*\\.(ts)$": 'ts-jest'

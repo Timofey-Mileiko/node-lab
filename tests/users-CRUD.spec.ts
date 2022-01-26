@@ -1,12 +1,8 @@
-import StudentBuilder from "../js/builder/student-builder";
-import Student from "../js/users/student";
-import TeacherBuilder from "../js/builder/teacher-builder";
-import Teacher from "../js/users/teacher";
-import AdministratorBuilder from "../js/builder/administrator-builder";
-import Administrator from "../js/users/administrator";
-import {administratorLevels} from "../js/types/types";
-import UsersStorage from "../js/storage/users-storage";
-import User from "../js/models/user";
+import {AdministratorBuilder, StudentBuilder, TeacherBuilder} from "../src/user/builders";
+import {Administrator, Student, Teacher} from "../src/user/types/users";
+import {UsersStorage} from "../src/user/storage";
+import {administratorLevels} from "../src/user/types/enums";
+import {User} from "../src/user/types/models";
 
 describe('Administrator', () => {
     let studentBuilder: StudentBuilder;

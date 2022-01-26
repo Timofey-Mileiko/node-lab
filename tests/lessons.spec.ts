@@ -1,46 +1,43 @@
-import LessonBuilder from "../js/builder/lesson-builder";
-import Lesson from "../js/models/lesson";
-import Teacher from "../js/users/teacher";
+import {LessonBuilder} from "../src/lesson/builders";
+import {Lesson} from "../src/lesson/types/models";
 
 describe('Lesson', () => {
     let lessonBuilder: LessonBuilder;
-    let teacher: Teacher;
 
     beforeEach(() => {
         lessonBuilder = new LessonBuilder();
-        teacher = new Teacher();
     });
 
     it('Lesson has "a401" classroom.', () => {
-        lessonBuilder.addClassroom('a401');
+        lessonBuilder.addName('Chemistry');
 
         const lesson: Lesson = lessonBuilder.build();
 
-        expect(lesson.classroom).toBe('a401');
+        expect(lesson.name).toBe('Chemistry');
     });
 
     it('Lesson has right teacher.', () => {
-        lessonBuilder.addTeacher(teacher);
+        lessonBuilder.addCourse('Medicine');
 
         const lesson: Lesson = lessonBuilder.build();
 
-        expect(lesson.teacher).toBe(teacher);
+        expect(lesson.course).toBe('Medicine');
     });
 
     it('Lesson has "Chemistry" subject.', () => {
-        lessonBuilder.addSubject('Chemistry');
+        lessonBuilder.addType('lecture');
 
         const lesson: Lesson = lessonBuilder.build();
 
-        expect(lesson.subject).toBe('Chemistry');
+        expect(lesson.type).toBe('lecture');
     });
 
     it('Lesson has "15:00" time.', () => {
-        lessonBuilder.addTime('15:00');
+        lessonBuilder.addDate('01/12/2022');
 
         const lesson: Lesson = lessonBuilder.build();
 
-        expect(lesson.time).toBe('15:00');
+        expect(lesson.date).toBe('01/12/2022');
     });
 });
 

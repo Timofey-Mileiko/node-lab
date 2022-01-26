@@ -1,10 +1,5 @@
-import AdministratorBuilder from "../js/builder/administrator-builder";
-import Administrator from "../js/users/administrator";
-import {administratorLevels} from "../js/types/types";
-import StudentBuilder from "../js/builder/student-builder";
-import TeacherBuilder from "../js/builder/teacher-builder";
-import Student from "../js/users/student";
-import Teacher from "../js/users/teacher";
+import {AdministratorBuilder, StudentBuilder, TeacherBuilder} from "../src/user/builders";
+import {Administrator, Student, Teacher} from "../src/user/types/users";
 
 describe('Common users fields', () => {
     let administratorBuilder: AdministratorBuilder;

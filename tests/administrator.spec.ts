@@ -1,6 +1,6 @@
-import AdministratorBuilder from "../js/builder/administrator-builder";
-import Administrator from "../js/users/administrator";
-import {administratorLevels} from "../js/types/types";
+import {AdministratorBuilder} from "../src/user/builders";
+import {administratorLevels} from "../src/user/types/enums";
+import {Administrator} from "../src/user/types/users";
 
 describe('Administrator', () => {
     let administratorBuilder: AdministratorBuilder;

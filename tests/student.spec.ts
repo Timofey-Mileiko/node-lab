@@ -1,5 +1,5 @@
-import StudentBuilder from "../js/builder/student-builder";
-import Student from "../js/users/student";
+import {StudentBuilder} from "../src/user/builders";
+import {Student} from "../src/user/types/users";
 
 describe('Student', () => {
     let studentBuilder: StudentBuilder;
