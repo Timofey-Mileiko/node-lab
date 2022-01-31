@@ -1,27 +1,48 @@
 import {Lesson} from "./types/models";
 import {LessonBuilder} from "./builders";
 import {LessonsStorage} from "./storage";
+import {pool} from "../db";
 
 const lessonsStorage = LessonsStorage.getInstance();
 
 export default class LessonService {
-    create(lessons: Lesson[] | void) {
+    async create(lessons: Lesson[] | void) {
         if(lessons) {
-            lessons.forEach((lesson) => {
-                const lessonBuilder = new LessonBuilder();
+            let queryString: string = `INSERT INTO lesson (name, course, date, type) VALUES `;
 
-                lessonBuilder.addCourse(lesson.course);
-                lessonBuilder.addDate(lesson.date);
-                lessonBuilder.addName(lesson.name);
-                lessonBuilder.addType(lesson.type);
+            lessons.forEach((lesson, index, array) => {
+                if(index === array.length - 1) {
+                    queryString += `('${lesson.name}', '${lesson.course}', '${lesson.date}', '${lesson.type}') `;
+                    return;
+                }
 
-                lessonsStorage.addLesson(lessonBuilder.build());
-            })
+                queryString += `('${lesson.name}', '${lesson.course}', '${lesson.date}', '${lesson.type}'), `;
+            });
+
+            queryString += 'RETURNING *;'
+
+            const lessonsQueryResult = await pool.query(queryString);
+
+            return lessonsQueryResult.rows;
         }
     }
 
-    getAll() {
-        return lessonsStorage.getLessons();
+    async getByUserId(id:number) {
+        const lessons = await pool.query(`SELECT * from lesson where teacher_id = $1`, [id]);
+
+        return lessons.rows;
+    }
+
+    async getAll() {
+        const lessons = await pool.query(`SELECT * from lesson`);
+
+        return lessons.rows;
+    }
+
+    async setTeacher(lessonId: number, teacherId: number) {
+        const lesson = await pool.query(`UPDATE lesson set teacher_id = ${teacherId} where id = ${lessonId} RETURNING *`);
+
+        return lesson.rows[0];
     }
 }
 

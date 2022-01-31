@@ -2,49 +2,73 @@ import {Router} from "express";
 import {NamedRouter} from "../common/types/tuples";
 import {userService} from "./user.service";
 import {updateUser} from "./utils";
+import {User} from "./types/models";
 
 const router = Router();
 
-router.get('/list', (req, res) => {
-    res.send(userService.getAll());
+router.get('/list', async (req, res) => {
+    try{
+        const users = await userService.getAll();
+
+        res.send(users);
+    } catch (e) {
+        res.status(500).json({message: 'Something went wrong...'})
+    }
 });
 
-router.post('/', (req, res) => {
+router.get('/:id', async (req, res) => {
+    const {id} = req.params;
+
+    try{
+        const user = await userService.getUserById(Number(id));
+
+        res.json(user);
+    }catch (e) {
+        res.status(500).json({message: 'Something went wrong...'})
+    }
+});
+
+router.post('/', async (req, res) => {
     const {role} = req.query;
 
     const {firstName = '', lastName = '', age = 0, gender = ''} = req.body;
 
-    switch (role) {
-        case 'Administrator':
-            const {administratorLevel = 0} = req.body;
+    try{
+        switch (role) {
+            case 'Administrator':
+                const {administratorLevel = 0} = req.body;
 
-            const administrator = userService.createAdministrator(firstName,lastName,age,gender,administratorLevel);
+                const administrator = await userService.createAdministrator(firstName,lastName,age,gender,administratorLevel, role);
 
-            res.status(201).json(administrator);
+                res.status(201).json(administrator);
 
-            break;
-        case 'Student':
-            const {faculty = '', group = '', speciality = ''} = req.body;
+                break;
+            case 'Student':
+                const {faculty = '', group = '', speciality = ''} = req.body;
 
-            const student = userService.createStudent(faculty, group, speciality, firstName, lastName, age, gender);
+                const student = await userService.createStudent(faculty, group, speciality, firstName, lastName, age, gender, role);
 
-            res.status(201).json(student);
+                res.status(201).json(student);
 
-            break;
-        case 'Teacher':
-            const {department='', specialization='', grade=''} = req.body;
+                break;
+            case 'Teacher':
+                const {department='', specialization='', grade=''} = req.body;
 
-            const teacher = userService.createTeacher(department, specialization, grade, firstName, lastName, age, gender);
+                const teacher = await userService.createTeacher(department, specialization, grade, firstName, lastName, age, gender, role);
 
-            res.status(201).json(teacher);
+                res.status(201).json(teacher);
 
-            break;
-        default:
-            res.status(404).json({message: 'Something went wrong'});
+                break;
+            default:
+                res.status(404).json({message: 'Something went wrong'});
+        }
+    } catch (e) {
+        res.status(500).json({message: 'Something went wrong...'})
     }
+
 });
 
-router.patch('/', (req, res) => {
+router.patch('/', async (req, res) => {
     const {id, role} = req.query;
     const allowedUpdates = ['firstName', 'lastName', 'age', 'gender'];
     const updates = Object.keys(req.body);
@@ -55,57 +79,68 @@ router.patch('/', (req, res) => {
     }
 
     const idTypeNumber = +id;
-    let updatedUser;
+    let updatedUser: User;
+    let updateUserString: string | void;
 
-    switch (role) {
-        case 'Administrator':
-            allowedUpdates.push('administratorLevel');
+    try{
+        switch (role) {
+            case 'Administrator':
+                allowedUpdates.push('administratorLevel');
 
-            updatedUser = updateUser(
-                updates,
-                allowedUpdates,
-                res,
-                idTypeNumber,
-                req
-            );
+                updateUserString = updateUser(
+                    updates,
+                    allowedUpdates,
+                    res
+                );
 
-            res.json(updatedUser);
+                if(!updateUserString) return;
 
-            break;
-        case 'Student':
-            allowedUpdates.push('faculty', 'group', 'speciality');
+                updatedUser = await userService.update(updateUserString, idTypeNumber, req.body, allowedUpdates);
 
-            updatedUser = updateUser(
-                updates,
-                allowedUpdates,
-                res,
-                idTypeNumber,
-                req
-            );
+                res.json(updatedUser);
 
-            res.json(updatedUser);
+                break;
+            case 'Student':
+                allowedUpdates.push('faculty', 'group', 'speciality');
 
-            break;
-        case 'Teacher':
-            allowedUpdates.push('department', 'specialization', 'grade');
+                updateUserString = updateUser(
+                    updates,
+                    allowedUpdates,
+                    res
+                );
 
-            updatedUser = updateUser(
-                updates,
-                allowedUpdates,
-                res,
-                idTypeNumber,
-                req
-            );
+                if(!updateUserString) return;
 
-            res.json(updatedUser);
+                updatedUser = await userService.update(updateUserString, idTypeNumber, req.body, allowedUpdates);
 
-            break;
-        default:
-            res.status(404).json({message: 'Something went wrong'});
+                res.json(updatedUser);
+
+                break;
+            case 'Teacher':
+                allowedUpdates.push('department', 'specialization', 'grade');
+
+                updateUserString = updateUser(
+                    updates,
+                    allowedUpdates,
+                    res
+                );
+
+                if(!updateUserString) return;
+
+                updatedUser = await userService.update(updateUserString, idTypeNumber, req.body, allowedUpdates);
+
+                res.json(updatedUser);
+
+                break;
+            default:
+                res.status(404).json({message: 'Something went wrong'});
+        }
+    } catch (e) {
+        res.status(500).json({message: 'Something went wrong...'});
     }
 });
 
-router.delete('/', (req, res) => {
+router.delete('/', async (req, res) => {
     const {id} = req.query;
 
     if(typeof id === "undefined"){
@@ -115,9 +150,13 @@ router.delete('/', (req, res) => {
 
     const idTypeNumber = + id;
 
-    userService.delete(idTypeNumber);
+    try{
+        await userService.delete(idTypeNumber);
 
-    res.json({message: `User with id ${id} was deleted`})
+        res.json({message: `User with id ${id} was deleted`})
+    }catch (e) {
+        res.status(500).json({message: 'Something went wrong...'});
+    }
 });
 
 export const UserRouter: NamedRouter = ['/user', router]

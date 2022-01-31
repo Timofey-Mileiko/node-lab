@@ -1,25 +1,9 @@
 import request from "supertest";
 import app from "../../src/app";
-import {UsersStorage} from "../../src/user/storage";
+import {pool} from "../../src/db";
+import {setupDatabase} from "../fixtures/setup-database";
 
-const usersStorage = UsersStorage.getInstance()
-
-beforeEach(async () => {
-    usersStorage.clearStorage();
-
-    await request(app)
-        .post('/user')
-        .query({role: "Teacher"})
-        .send({
-            department: 'Health and Social Security',
-            specialization: 'Anesthesiology',
-            grade: 'Teacher Training Centre',
-            gender: 'female',
-            firstName: 'Tatyana',
-            lastName: 'Nepomniachtchiya',
-            age: 42
-        });
-})
+beforeEach(setupDatabase);
 
 test('Should create user', async () => {
     const response = await request(app)
@@ -36,16 +20,9 @@ test('Should create user', async () => {
         })
         .expect(201);
 
-    expect(response.body).toMatchObject({
-        firstName: 'Tomas',
-        lastName: 'Jerry',
-        role: 'Student',
-        age: 27,
-        gender: 'male',
-        faculty: 'Electronic',
-        group: '8.6a',
-        speciality: 'Medicine'
-    })
+    const expectedUser = await pool.query(`SELECT firstname, lastname, age, gender, role, speciality, "group", faculty, id FROM "user" where id = ${response.body.id}`);
+
+    expect(response.body).toMatchObject(expectedUser.rows[0]);
 });
 
 test('Should update user', async () => {
@@ -63,9 +40,9 @@ test('Should update user', async () => {
         })
         .expect(200);
 
-    expect(patchResponse.body).toMatchObject({
-        age: 43,
-    })
+    const expectedUser = await pool.query(`SELECT age FROM "user" where id = ${patchResponse.body.id}`);
+
+    expect(patchResponse.body).toMatchObject(expectedUser.rows[0])
 });
 
 test('Should delete user', async () => {
@@ -75,12 +52,20 @@ test('Should delete user', async () => {
 
     const testUser = getResponse.body[0];
 
-    const patchResponse = await request(app)
+    await request(app)
         .delete('/user')
         .query({id: testUser.id})
         .expect(200);
 
-    const users = usersStorage.getUsers()
+    const users = await pool.query(`SELECT * from "user"`);
 
-    expect(users.length).toEqual(0)
+    expect(users.rows.length).toEqual(0);
+});
+
+test('Should get users', async () => {
+    const getResponse = await request(app)
+        .get('/user/list')
+        .expect(200);
+
+    expect(getResponse.body.length).toEqual(1);
 });
