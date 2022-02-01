@@ -5,23 +5,30 @@ import {User} from "../types/models";
 export const updateUser = (
     updates: string[],
     allowedUpdates: string[],
-    res: Response,
-    idTypeNumber: number,
-    req: Request
-) => {
-    let user: User
-
+    res: Response
+): string | void => {
     const isValidOperation = updates.every((update) =>
         allowedUpdates.includes(update)
     );
 
     if (!isValidOperation) {
-        return res.status(400).send({ error: "Invalid updates" });
+        res.status(400).send({ error: "Invalid updates" });
+        return;
     }
 
-    updates.forEach((update) => {
-        user = userService.update(idTypeNumber, update, req.body[update]);
-    });
+    let updatesString: string = updates.reduce((accumulator, update, index, array) => {
+        if(update === 'group') update = `"${update}"`;
 
-    return user!;
+        if(index === array.length - 1) {
+            accumulator += `${update} = $${index+1} `;
+            return accumulator;
+        }
+        accumulator += `${update} = $${index+1}, `;
+
+        return accumulator;
+    }, '');
+
+    updatesString += `where id = $${updates.length + 1} `;
+
+    return updatesString;
 }
