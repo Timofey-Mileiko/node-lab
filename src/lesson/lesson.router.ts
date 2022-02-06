@@ -3,6 +3,7 @@ import { NamedRouter } from '../common/types/tuples'
 import {lessonService} from './lesson.service';
 import fs from 'fs';
 import CsvFilesReader from "../common/csv-files-reader";
+import {client} from "../common/db/database.redis";
 
 const router = Router()
 
@@ -30,16 +31,32 @@ router.post('/upload', (req, res) => {
 router.get('/list', async (req, res) => {
     const {id} = req.query;
 
-    if(id) {
-        const lessons = await lessonService.getByUserId(Number(id))
+    try {
+        if(id) {
+            const lessons = await lessonService.getByUserId(Number(id))
 
+            res.json(lessons);
+            return;
+        }
+        const data = await client.get('lessons');
+
+        if(data){
+            res.json(JSON.parse(data));
+
+            return;
+        }
+
+        const lessons = await lessonService.getAll();
+        client.set('lessons', JSON.stringify(lessons));
         res.json(lessons);
-        return;
+    }catch (e) {
+        res.status(500).json({message: 'something went wrong...'});
+
     }
 
-    const lessons = await lessonService.getAll();
 
-    res.json(lessons);
+
+
 });
 
 router.patch('/set-teacher', async (req, res) => {

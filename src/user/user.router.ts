@@ -3,15 +3,25 @@ import {NamedRouter} from "../common/types/tuples";
 import {userService} from "./user.service";
 import {updateUser} from "./utils";
 import {User} from "./types/models";
+import {client} from "../common/db/database.redis";
 
 const router = Router();
 
 router.get('/list', async (req, res) => {
     try{
-        const users = await userService.getAll();
+        const data = await client.get('users');
 
-        res.send(users);
-    } catch (e) {
+        if(data){
+            res.json(JSON.parse(data));
+
+            return;
+        }
+
+        const users = await userService.getAll();
+        client.set('users', JSON.stringify(users));
+        res.json(users);
+    } catch (error) {
+        console.log(error)
         res.status(500).json({message: 'Something went wrong...'})
     }
 });
