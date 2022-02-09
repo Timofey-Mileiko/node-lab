@@ -1,48 +1,45 @@
-import {Lesson} from "./types/models";
-import {LessonBuilder} from "./builders";
-import {LessonsStorage} from "./storage";
-import {pool} from "../db";
-
-const lessonsStorage = LessonsStorage.getInstance();
+import {getRepository} from "typeorm";
+import {Lesson as LessonEntity} from './entities';
+import {User as UserEntity} from "../user/entities";
 
 export default class LessonService {
-    async create(lessons: Lesson[] | void) {
-        if(lessons) {
-            let queryString: string = `INSERT INTO lesson (name, course, date, type) VALUES `;
-
-            lessons.forEach((lesson, index, array) => {
-                if(index === array.length - 1) {
-                    queryString += `('${lesson.name}', '${lesson.course}', '${lesson.date}', '${lesson.type}') `;
-                    return;
-                }
-
-                queryString += `('${lesson.name}', '${lesson.course}', '${lesson.date}', '${lesson.type}'), `;
-            });
-
-            queryString += 'RETURNING *;'
-
-            const lessonsQueryResult = await pool.query(queryString);
-
-            return lessonsQueryResult.rows;
-        }
+    async create(lessons: LessonEntity[]): Promise<LessonEntity> {
+        const lessonRepository = getRepository(LessonEntity);
+        const createdLessons = await lessonRepository.createQueryBuilder('lesson')
+            .insert()
+            .into(LessonEntity)
+            .values(lessons)
+            .returning(['id', 'name', 'type', 'course', 'date', 'teacher_id', ])
+            .execute();
+        return createdLessons.raw;
     }
 
     async getByUserId(id:number) {
-        const lessons = await pool.query(`SELECT * from lesson where teacher_id = $1`, [id]);
-
-        return lessons.rows;
+        const lessonRepository = getRepository(LessonEntity);
+        return await lessonRepository.createQueryBuilder('lesson')
+            .select()
+            .where("id = :id", {id})
+            .getOne();
     }
 
     async getAll() {
-        const lessons = await pool.query(`SELECT * from lesson`);
-
-        return lessons.rows;
+        const lessonRepository = getRepository(LessonEntity);
+        return await lessonRepository.createQueryBuilder('lesson')
+            .select()
+            .where({})
+            .getMany();
     }
 
     async setTeacher(lessonId: number, teacherId: number) {
-        const lesson = await pool.query(`UPDATE lesson set teacher_id = ${teacherId} where id = ${lessonId} RETURNING *`);
+        const lessonRepository = getRepository(LessonEntity);
+        const userRepository = getRepository(UserEntity);
+        const teacher = await userRepository.findOne({id: teacherId, role: 'Teacher'});
 
-        return lesson.rows[0];
+        await lessonRepository.createQueryBuilder('lesson')
+            .relation(LessonEntity, "teacher")
+            .of(lessonId)
+            .set(teacher);
+
     }
 }
 

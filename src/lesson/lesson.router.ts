@@ -21,6 +21,11 @@ router.post('/upload', (req, res) => {
         filestream.close(async () => {
             const lessonsArray = await CsvFilesReader.readCsvFile('data/lessons.csv')
 
+            if(typeof lessonsArray === 'undefined') {
+                res.status(400).json({message: "File didn't read."});
+                return;
+            }
+
             const lessons = await lessonService.create(lessonsArray);
 
             res.status(201).json(lessons)
@@ -53,10 +58,6 @@ router.get('/list', async (req, res) => {
         res.status(500).json({message: 'something went wrong...'});
 
     }
-
-
-
-
 });
 
 router.patch('/set-teacher', async (req, res) => {

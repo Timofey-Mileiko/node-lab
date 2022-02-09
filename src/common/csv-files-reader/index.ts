@@ -1,16 +1,17 @@
 import {readFile} from 'fs/promises';
-import {Lesson} from "../../lesson/types/models";
+import {Lesson} from "../../lesson/entities";
 
 export default class CsvFilesReader {
   private static fileContent: string;
 
-  public static async readCsvFile (path: Buffer | string ): Promise<Lesson[] | void> {
+  public static async readCsvFile (path: Buffer | string ): Promise<Lesson[] | undefined> {
     try {
        const buffer: Buffer = await readFile(path);
 
       this.fileContent = buffer.toString('utf8');
-
-      return this.transformStringToObjects();
+      if(this.fileContent){
+        return this.transformStringToObjects();
+      }
     } catch (error) {
       console.log(error);
     }
