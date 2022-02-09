@@ -1,9 +1,7 @@
-import {AdministratorBuilder, StudentBuilder, TeacherBuilder} from "./builders";
 import {UsersStorage} from "./storage";
 import {administratorLevels} from "./types/enums";
-import {Administrator, Student, Teacher} from "./types/users";
-import {User} from "./types/models";
-import {pool} from "../db";
+import {User as UserEntity} from './entities'
+import {getRepository} from "typeorm";
 
 export default class UserService {
     storage: UsersStorage = UsersStorage.getInstance();
@@ -13,20 +11,30 @@ export default class UserService {
         id: number,
         body: {[key: string]: string | number},
         allowedUpdates: string[]
-    ) {
+    ): Promise<UserEntity> {
         const returningKeys = allowedUpdates.map((string) => {
             if(string === 'group') return `"${string}"`
             return string;
         });
 
-        const user = await pool.query(`UPDATE "user" set ${updateString} RETURNING ${returningKeys}, id`, [...Object.values(body), id])
+        const userRepository = getRepository(UserEntity);
+        const updatedUser = await userRepository.createQueryBuilder('user')
+            .update(UserEntity)
+            .set(body)
+            .where("id = :id", { id })
+            .returning(returningKeys)
+            .execute();
 
-        return user.rows[0];
+        return updatedUser.raw;
     }
 
     async delete(id: number) {
-        const users = await pool.query('DELETE FROM "user" where id = $1', [id]);
-        return users.rows;
+        const userRepository = getRepository(UserEntity);
+        await userRepository.createQueryBuilder('user').createQueryBuilder()
+            .delete()
+            .from(UserEntity)
+            .where("id = :id", {id})
+            .execute();
     }
 
     async createStudent(
@@ -38,22 +46,16 @@ export default class UserService {
         age: number,
         gender: string,
         role: string
-    ): Promise<Student> {
-        const createdUser = await pool.query(`INSERT INTO "user" (firstname, lastname, age, gender, role, speciality, "group", faculty)
-                           values ($1, $2, $3, $4, $5, $6, $7, $8)
-                           RETURNING firstname, lastname, age, gender, role, speciality, "group", faculty, id`,
-            [
-                firstName,
-                lastName,
-                age,
-                gender,
-                role,
-                speciality,
-                group,
-                faculty
-            ]);
+    ): Promise<UserEntity> {
+        const userRepository = getRepository(UserEntity);
+        const createdUser = await userRepository.createQueryBuilder('user')
+            .insert()
+            .into(UserEntity)
+            .values({firstName, lastName, age, gender, role, speciality, group, faculty})
+            .returning(['firstName', 'lastName', 'age', 'gender', 'role', 'speciality', 'group', 'faculty'])
+            .execute();
 
-         return createdUser.rows[0];
+        return createdUser.raw;
     }
 
     async createTeacher(
@@ -65,22 +67,16 @@ export default class UserService {
         age: number,
         gender: string,
         role: string
-    ): Promise<Teacher> {
-        const createdUser = await pool.query(`INSERT INTO "user" (firstname, lastname, age, gender, role, department, specialization, grade)
-                           values ($1, $2, $3, $4, $5, $6, $7, $8)
-                           RETURNING firstname, lastname, age, gender, role, department, specialization, grade, id`,
-            [
-                firstName,
-                lastName,
-                age,
-                gender,
-                role,
-                department,
-                specialization,
-                grade
-            ]);
+    ): Promise<UserEntity> {
+        const userRepository = getRepository(UserEntity);
+        const createdUser = await userRepository.createQueryBuilder('user')
+            .insert()
+            .into(UserEntity)
+            .values({firstName, lastName, age, gender, role, department, specialization, grade})
+            .returning(['firstName', 'lastName', 'age', 'gender', 'role', 'department', 'specialization', 'grade'])
+            .execute();
 
-        return createdUser.rows[0];
+        return createdUser.raw;
     }
 
     async createAdministrator(
@@ -90,32 +86,32 @@ export default class UserService {
         gender: string,
         administratorLevel: administratorLevels,
         role: string
-    ): Promise<Administrator> {
-        const createdUser = await pool.query(`INSERT INTO "user" (firstname, lastname, age, gender, role, administratorLevel)
-                           values ($1, $2, $3, $4, $5, $6)
-                           RETURNING firstname, lastname, age, gender, role, administratorLevel, id`,
-            [
-                firstName,
-                lastName,
-                age,
-                gender,
-                role,
-                administratorLevel
-            ]
-        );
+    ): Promise<UserEntity> {
+        const userRepository = getRepository(UserEntity);
+        const createdUser = await userRepository.createQueryBuilder('user')
+            .insert()
+            .into(UserEntity)
+            .values({firstName, lastName, age, gender, role, administratorLevel})
+            .returning(['firstName', 'lastName', 'age', 'gender', 'role', 'department', 'specialization', 'grade'])
+            .execute();
 
-        return createdUser.rows[0];
+        return createdUser.raw;
     }
 
-    async getAll(): Promise<User[]> {
-        const users = await pool.query('SELECT * FROM "user"');
-        return users.rows;
+    async getAll(): Promise<UserEntity[]> {
+        const userRepository = getRepository(UserEntity);
+        return await userRepository.createQueryBuilder('user')
+            .select()
+            .where({})
+            .getMany();
     }
 
-    async getUserById(id:number) {
-        const users = await pool.query('SELECT * FROM "user" where id = $1', [id]);
-
-        return users.rows[0]
+    async getUserById(id:number): Promise<UserEntity[]> {
+        const userRepository = getRepository(UserEntity);
+        return await userRepository.createQueryBuilder('user')
+            .select()
+            .where("id = :id", {id})
+            .getMany();
     }
 }
 

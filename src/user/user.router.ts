@@ -2,7 +2,6 @@ import {Router} from "express";
 import {NamedRouter} from "../common/types/tuples";
 import {userService} from "./user.service";
 import {updateUser} from "./utils";
-import {User} from "./types/models";
 import {client} from "../common/db/database.redis";
 
 const router = Router();
@@ -10,7 +9,6 @@ const router = Router();
 router.get('/list', async (req, res) => {
     try{
         const data = await client.get('users');
-
         if(data){
             res.json(JSON.parse(data));
 
@@ -89,7 +87,7 @@ router.patch('/', async (req, res) => {
     }
 
     const idTypeNumber = +id;
-    let updatedUser: User;
+    let updatedUser: any;
     let updateUserString: string | void;
 
     try{
