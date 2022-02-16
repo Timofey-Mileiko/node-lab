@@ -10,13 +10,13 @@ const main = async () => {
     try {
         await createConnection({
             type: 'postgres',
-            host: 'localhost',
+            host: 'postgres',
             port: 5432,
             username: 'postgres',
             password: 'root',
             database: 'node_postgres',
             entities: [User, Lesson],
-            synchronize: false,
+            synchronize: true,
             migrations: ["src/common/migration/*.ts"],
             cli: {
                 "migrationsDir": "src/common/migration"

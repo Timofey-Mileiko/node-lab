@@ -5,7 +5,7 @@
   "username": "postgres",
   "password": "root",
   "database": "node_postgres",
-  "synchronize": false,
+  "synchronize": true,
   "logging": false,
   "entities": [
     "src/user/entities/*.ts",
