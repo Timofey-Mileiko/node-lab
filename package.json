@@ -1,0 +1,23 @@
+{
+  "name": "lab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "invoke:hello": "serverless invoke local --function hello"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Timofey-Mileiko/node-lab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Timofey-Mileiko/node-lab/issues"
+  },
+  "homepage": "https://github.com/Timofey-Mileiko/node-lab#readme",
+  "dependencies": {
+    "serverless": "^3.3.0"
+  }
+}
